@@ -23,4 +23,12 @@ public class UserService {
         }
         return userDao.updatePassword(idCardNumber, newPassword);
     }
+
+    // 同步用户：如果 user 表中不存在该身份证号，则自动创建，默认密码 123456，角色 student
+    public boolean syncUser(String name, String idCardNumber) throws SQLException {
+        if (userDao.existsByIdCardNumber(idCardNumber)) {
+            return true; // 已存在，无需创建
+        }
+        return userDao.addUser(name, idCardNumber, "123456", "student");
+    }
 }

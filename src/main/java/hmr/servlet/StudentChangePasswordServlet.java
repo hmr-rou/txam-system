@@ -11,7 +11,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.SQLException;
 
-@WebServlet("/student/changePassword")
+@WebServlet("/StudentChangePasswordServlet")
 public class StudentChangePasswordServlet extends HttpServlet {
 
     private UserService userService = new UserService();
@@ -35,16 +35,16 @@ public class StudentChangePasswordServlet extends HttpServlet {
         try {
             boolean success = userService.changePassword(user.getIdCardNumber(), oldPassword, newPassword);
             if (success) {
-                request.setAttribute("message", "密码修改成功");
+                session.setAttribute("message", "密码修改成功");
             } else {
-                request.setAttribute("error", "原密码错误");
+                session.setAttribute("error", "原密码错误");
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            request.setAttribute("error", "修改失败，请稍后重试");
+            session.setAttribute("error", "修改失败，请稍后重试");
         }
 
         // 重新查询成绩
-        response.sendRedirect(request.getContextPath() + "/student/home");
+        response.sendRedirect(request.getContextPath() + "/StudentHomeServlet");
     }
 }

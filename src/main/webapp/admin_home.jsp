@@ -5,8 +5,17 @@
 <%
     User user = (User) session.getAttribute("user");
     List<Cet4Score> scoreList = (List<Cet4Score>) request.getAttribute("scoreList");
+    // 优先从 request 读取，再从 session 读取（redirect 过来的消息存在 session 中）
     String message = (String) request.getAttribute("message");
+    if (message == null) {
+        message = (String) session.getAttribute("message");
+        session.removeAttribute("message");
+    }
     String error = (String) request.getAttribute("error");
+    if (error == null) {
+        error = (String) session.getAttribute("error");
+        session.removeAttribute("error");
+    }
 %>
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -24,7 +33,7 @@
     <div class="nav-right">
         <span class="user-name">👤 <%= user != null ? user.getName() : "系统管理员" %></span>
         <a href="javascript:void(0)" class="logout-btn" onclick="openChangePwdModal()">🔐 修改密码</a>
-        <a href="${pageContext.request.contextPath}/logout" class="logout-btn">退出登录</a>
+        <a href="${pageContext.request.contextPath}/LogoutServlet" class="logout-btn">退出登录</a>
     </div>
 </div>
 
@@ -131,7 +140,7 @@
             <span class="close" onclick="closeModal()">&times;</span>
         </div>
         <div class="modal-body">
-            <form id="scoreForm" action="${pageContext.request.contextPath}/admin/saveScore" method="post">
+            <form id="scoreForm" action="${pageContext.request.contextPath}/AdminSaveScoreServlet" method="post" onsubmit="return false;">
                 <input type="hidden" name="id" id="scoreId">
                 <div class="form-row">
                     <div class="form-group">
@@ -181,7 +190,7 @@
         </div>
         <div class="modal-footer">
             <button class="btn btn-outline" onclick="closeModal()">取消</button>
-            <button class="btn btn-primary" onclick="submitForm()">保存</button>
+            <button type="button" class="btn btn-primary" onclick="submitForm()">保存</button>
         </div>
     </div>
 </div>
@@ -194,7 +203,7 @@
             <span class="close" onclick="closeChangePwdModal()">&times;</span>
         </div>
         <div class="modal-body">
-            <form id="changePwdForm" action="${pageContext.request.contextPath}/admin/changePassword" method="post">
+            <form id="changePwdForm" action="${pageContext.request.contextPath}/AdminChangePasswordServlet" method="post">
                 <div class="form-group">
                     <label>原密码 <span class="required">*</span></label>
                     <input type="password" name="oldPassword" id="oldPassword" required placeholder="请输入原密码">
@@ -218,7 +227,27 @@
 
 <script>
     function submitForm() {
-        document.getElementById('scoreForm').submit();
+        var form = document.getElementById('scoreForm');
+        var formData = new FormData(form);
+
+        fetch(form.action, {
+            method: 'POST',
+            body: formData
+        })
+        .then(function(response) { return response.json(); })
+        .then(function(data) {
+            if (data.success) {
+                alert(data.message);
+                closeModal();
+                // 刷新页面以显示最新数据
+                window.location.href = '${pageContext.request.contextPath}/AdminHomeServlet';
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(function(error) {
+            alert('请求失败：' + error);
+        });
     }
 
     function openAddModal() {
@@ -229,7 +258,7 @@
     }
 
     function editScore(id) {
-        fetch('${pageContext.request.contextPath}/admin/getScore?id=' + id)
+        fetch('${pageContext.request.contextPath}/AdminGetScoreServlet?id=' + id)
             .then(response => response.json())
             .then(data => {
                 document.getElementById('modalTitle').innerText = '修改成绩';
@@ -259,7 +288,7 @@
 
     function deleteScore(id) {
         if (confirm('确定要删除这条成绩记录吗？')) {
-            window.location.href = '${pageContext.request.contextPath}/admin/deleteScore?id=' + id;
+            window.location.href = '${pageContext.request.contextPath}/AdminDeleteScoreServlet?id=' + id;
         }
     }
 
@@ -286,7 +315,7 @@
         var major = document.getElementById('searchMajor').value;
         var className = document.getElementById('searchClass').value;
 
-        window.location.href = '${pageContext.request.contextPath}/admin/search?idCard=' + encodeURIComponent(idCard)
+        window.location.href = '${pageContext.request.contextPath}/AdminSearchServlet?idCard=' + encodeURIComponent(idCard)
             + '&admissionNo=' + encodeURIComponent(admissionNo)
             + '&school=' + encodeURIComponent(school)
             + '&college=' + encodeURIComponent(college)

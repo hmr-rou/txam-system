@@ -100,10 +100,10 @@ public class Cet4ScoreDao {
 
     // 修改成绩
     public boolean update(Cet4Score score) throws SQLException {
-        String sql = "UPDATE cet4_score SET name=?, school=?, college=?, major=?, class_name=?, id_card_number=?, score=?, exam_time=? WHERE id=?";
+        String sql = "UPDATE cet4_score SET name=?, school=?, college=?, major=?, class_name=?, id_card_number=?, admission_no=?, score=?, exam_time=? WHERE id=?";
         int rows = runner.update(sql, score.getName(), score.getSchool(), score.getCollege(),
                 score.getMajor(), score.getClassName(), score.getIdCardNumber(),
-                score.getScore(), score.getExamTime(), score.getId());
+                score.getAdmissionNo(), score.getScore(), score.getExamTime(), score.getId());
         return rows > 0;
     }
 

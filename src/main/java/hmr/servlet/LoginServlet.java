@@ -11,7 +11,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.SQLException;
 
-@WebServlet("/login")
+@WebServlet("/LoginServlet")
 public class LoginServlet extends HttpServlet {
 
     private UserService userService = new UserService();
@@ -37,9 +37,9 @@ public class LoginServlet extends HttpServlet {
             session.setAttribute("user", user);
 
             if ("admin".equals(user.getRole())) {
-                response.sendRedirect(request.getContextPath() + "/admin/home");
+                response.sendRedirect(request.getContextPath() + "/AdminHomeServlet");
             } else {
-                response.sendRedirect(request.getContextPath() + "/student/home");
+                response.sendRedirect(request.getContextPath() + "/StudentHomeServlet");
             }
         } catch (SQLException e) {
             e.printStackTrace();

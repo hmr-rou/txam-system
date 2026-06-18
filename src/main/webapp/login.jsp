@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -15,7 +16,7 @@
         <p>成绩管理系统</p>
     </div>
 
-    <form action="${pageContext.request.contextPath}/login" method="post">
+    <form action="${pageContext.request.contextPath}/LoginServlet" method="post">
         <div class="input-group" style="margin-bottom: 20px;">
             <label>身份证号</label>
             <input type="text" name="username" placeholder="请输入身份证号" required
