@@ -1,0 +1,550 @@
+/* =====================================================
+   大学英语四级考试成绩管理系统 - 公共样式
+   色调：淡蓝灰，清新简洁
+   ===================================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif;
+    background-color: #eef3f5;
+    color: #3a6b7a;
+}
+
+/* =====================================================
+   导航栏样式
+   ===================================================== */
+
+.navbar {
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    padding: 0 30px;
+    height: 56px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.logo {
+    font-size: 18px;
+    font-weight: 600;
+    color: #7ab3c8;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.user-name {
+    color: #3a6b7a;
+    font-size: 14px;
+}
+
+.logout-btn {
+    color: #7ab3c8;
+    text-decoration: none;
+    font-size: 14px;
+    padding: 6px 14px;
+    border: 1px solid #7ab3c8;
+    border-radius: 20px;
+    transition: all 0.3s;
+}
+
+.logout-btn:hover {
+    background: #7ab3c8;
+    color: #fff;
+}
+
+/* =====================================================
+   主容器
+   ===================================================== */
+
+.container {
+    max-width: 1400px;
+    margin: 24px auto;
+    padding: 0 24px;
+}
+
+/* =====================================================
+   卡片组件
+   ===================================================== */
+
+.card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    margin-bottom: 24px;
+    overflow: hidden;
+}
+
+.card-header {
+    padding: 14px 20px;
+    border-bottom: 1px solid #e0ecef;
+    font-size: 15px;
+    font-weight: 600;
+    color: #2c5a6e;
+    background: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+/* =====================================================
+   按钮样式
+   ===================================================== */
+
+.btn {
+    padding: 8px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.3s;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-primary {
+    background: #7ab3c8;
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background: #5a9bb3;
+}
+
+.btn-success {
+    background: #8bc4a0;
+    color: #fff;
+}
+
+.btn-success:hover {
+    background: #6baa7a;
+}
+
+.btn-danger {
+    background: #d9877a;
+    color: #fff;
+}
+
+.btn-danger:hover {
+    background: #c97062;
+}
+
+.btn-outline {
+    background: transparent;
+    border: 1px solid #7ab3c8;
+    color: #7ab3c8;
+}
+
+.btn-outline:hover {
+    background: #7ab3c8;
+    color: #fff;
+}
+
+.btn-sm {
+    padding: 4px 12px;
+    font-size: 12px;
+}
+
+/* =====================================================
+   表单样式
+   ===================================================== */
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+    font-size: 13px;
+    color: #5a8a9a;
+}
+
+.form-group .required {
+    color: #d9877a;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    max-width: 300px;
+    padding: 8px 12px;
+    border: 1px solid #d4e0e5;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: all 0.3s;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #7ab3c8;
+    box-shadow: 0 0 0 2px rgba(122, 179, 200, 0.2);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+/* =====================================================
+   表格样式
+   ===================================================== */
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.data-table th,
+.data-table td {
+    padding: 10px 12px;
+    text-align: center;
+    border-bottom: 1px solid #e8f0f2;
+}
+
+.data-table th {
+    background: #f5fafc;
+    font-weight: 600;
+    color: #3a6b7a;
+}
+
+.data-table tbody tr:hover {
+    background: #f5fafc;
+}
+
+/* =====================================================
+   成绩列样式
+   ===================================================== */
+
+.score-pass {
+    color: #6baa7a;
+    font-weight: 600;
+}
+
+.score-fail {
+    color: #d9877a;
+    font-weight: 600;
+}
+
+/* =====================================================
+   操作链接样式
+   ===================================================== */
+
+.action-links {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+.edit-link {
+    background: #e8f0f2;
+    color: #5a9bb3;
+    text-decoration: none;
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.delete-link {
+    background: #fef0ef;
+    color: #d9877a;
+    text-decoration: none;
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: pointer;
+    display: inline-block;
+}
+
+/* =====================================================
+   查询面板样式
+   ===================================================== */
+
+.search-panel {
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.search-title {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: #2c5a6e;
+}
+
+.search-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: flex-end;
+}
+
+.search-item {
+    flex: 1;
+    min-width: 150px;
+}
+
+.search-item label {
+    display: block;
+    font-size: 12px;
+    color: #8ea8b5;
+    margin-bottom: 4px;
+}
+
+.search-item input {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #d4e0e5;
+    border-radius: 6px;
+    font-size: 13px;
+}
+
+.search-actions {
+    display: flex;
+    gap: 8px;
+}
+
+/* =====================================================
+   按钮栏
+   ===================================================== */
+
+.action-bar {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+/* =====================================================
+   模态框样式
+   ===================================================== */
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: #fff;
+    border-radius: 12px;
+    width: 520px;
+    max-width: 90%;
+    max-height: 85%;
+    overflow-y: auto;
+}
+
+.modal-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid #e0ecef;
+    font-size: 16px;
+    font-weight: 600;
+    color: #2c5a6e;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header .close {
+    cursor: pointer;
+    font-size: 20px;
+    color: #a8c8d8;
+}
+
+.modal-header .close:hover {
+    color: #3a6b7a;
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+.modal-footer {
+    padding: 12px 20px;
+    border-top: 1px solid #e0ecef;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+/* =====================================================
+   消息提示样式
+   ===================================================== */
+
+.alert-success {
+    background: #e8f5ed;
+    color: #6baa7a;
+    padding: 10px 16px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border: 1px solid #c8e0d0;
+    font-size: 13px;
+}
+
+.alert-error {
+    background: #fef0ef;
+    color: #d9877a;
+    padding: 10px 16px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border: 1px solid #f5d6d2;
+    font-size: 13px;
+}
+
+/* =====================================================
+   空状态样式
+   ===================================================== */
+
+.empty-state {
+    text-align: center;
+    padding: 50px 20px;
+    color: #a8c8d8;
+}
+
+/* =====================================================
+   登录页面专用样式
+   ===================================================== */
+
+.login-container {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    width: 380px;
+    padding: 40px;
+    animation: fadeInUp 0.4s ease;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.login-header .logo-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+}
+
+.login-header h1 {
+    font-size: 22px;
+    color: #2c5a6e;
+    margin-bottom: 8px;
+}
+
+.login-header p {
+    color: #8ea8b5;
+    font-size: 13px;
+}
+
+.login-bg {
+    background: linear-gradient(135deg, #7ab3c8 0%, #a8c8d8 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* =====================================================
+   考生主页专用样式（表格宽度）
+   ===================================================== */
+
+.student-container {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 0 24px;
+}
+
+/* =====================================================
+   响应式设计
+   ===================================================== */
+
+@media (max-width: 768px) {
+    .navbar {
+        padding: 0 16px;
+    }
+
+    .container {
+        padding: 0 16px;
+    }
+
+    .student-container {
+        padding: 0 16px;
+    }
+
+    .search-form {
+        flex-direction: column;
+    }
+
+    .search-item {
+        width: 100%;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .action-links {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .data-table th,
+    .data-table td {
+        padding: 8px 10px;
+        font-size: 12px;
+    }
+
+    .form-group input,
+    .form-group select {
+        max-width: 100%;
+    }
+}
