@@ -113,4 +113,17 @@ public class Cet4ScoreDao {
         int rows = runner.update(sql, id);
         return rows > 0;
     }
+
+    // 批量导入成绩
+    public int batchAdd(List<Cet4Score> scoreList) throws SQLException {
+        String sql = "INSERT INTO cet4_score (name, school, college, major, class_name, id_card_number, admission_no, score, exam_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        int count = 0;
+        for (Cet4Score score : scoreList) {
+            int rows = runner.update(sql, score.getName(), score.getSchool(), score.getCollege(),
+                    score.getMajor(), score.getClassName(), score.getIdCardNumber(),
+                    score.getAdmissionNo(), score.getScore(), score.getExamTime());
+            if (rows > 0) count++;
+        }
+        return count;
+    }
 }

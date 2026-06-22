@@ -48,6 +48,8 @@
     <div class="action-bar">
         <button class="btn btn-primary" onclick="openAddModal()">➕ 录入成绩</button>
         <button class="btn btn-success" onclick="toggleSearch()">🔍 高级查询</button>
+        <button class="btn btn-primary" onclick="openImportModal()" style="background:#c49b7a;">📥 批量导入</button>
+        <a href="${pageContext.request.contextPath}/AdminDownloadTemplateServlet" class="btn btn-outline btn-sm" style="padding:8px 16px;">📋 下载导入模板</a>
     </div>
 
     <!-- 多条件查询面板 -->
@@ -81,6 +83,7 @@
             <div class="search-actions">
                 <button class="btn btn-primary" onclick="searchScores()">🔍 查询</button>
                 <button class="btn btn-outline" onclick="resetSearch()">重置</button>
+                <button class="btn btn-success" onclick="exportScores()">📤 导出Excel</button>
             </div>
         </div>
     </div>
@@ -88,7 +91,7 @@
     <!-- 成绩列表 -->
     <div class="card">
         <div class="card-header">
-            <span>📋 考生成绩列表</span>
+            <span>考生成绩列表</span>
             <span style="color:#8ea8b5; font-size:12px" id="recordCount">共 0 条记录</span>
         </div>
         <div class="card-body">
@@ -128,6 +131,45 @@
                     </tbody>
                 </table>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- 批量导入模态框 -->
+<div id="importModal" class="modal">
+    <div class="modal-content" style="width: 550px;">
+        <div class="modal-header">
+            <span>📥 批量导入成绩</span>
+            <span class="close" onclick="closeImportModal()">&times;</span>
+        </div>
+        <div class="modal-body">
+            <div style="background:#f5fafc; border:1px solid #d4e0e5; border-radius:8px; padding:12px; margin-bottom:16px; font-size:13px; color:#5a8a9a;">
+                <strong>📋 导入说明：</strong>
+                <ol style="margin:8px 0 0 16px; line-height:1.8;">
+                    <li>请先<a href="${pageContext.request.contextPath}/AdminDownloadTemplateServlet" style="color:#7ab3c8;">下载导入模板</a>，按模板格式填写数据</li>
+                    <li>支持 .xlsx 和 .xls 格式的 Excel 文件</li>
+                    <li>文件大小不超过 10MB</li>
+                    <li>考试时间格式：yyyy-MM-dd（如 2024-06-15）</li>
+                    <li>成绩范围：0-710</li>
+                    <li>导入成功后会自动为学生创建登录账号（默认密码：123456）</li>
+                </ol>
+            </div>
+            <form id="importForm" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label>选择 Excel 文件 <span class="required">*</span></label>
+                    <input type="file" id="excelFile" name="excelFile"
+                           accept=".xlsx,.xls"
+                           style="max-width:100%; padding:6px;"
+                           onchange="updateFileName()">
+                </div>
+                <div id="fileNameDisplay" style="font-size:12px; color:#8ea8b5; margin-top:-8px;"></div>
+            </form>
+            <!-- 导入进度/结果区域 -->
+            <div id="importResult" style="display:none;"></div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" onclick="closeImportModal()">取消</button>
+            <button class="btn btn-primary" id="importBtn" onclick="submitImport()" style="background:#c49b7a;">开始导入</button>
         </div>
     </div>
 </div>
@@ -226,6 +268,146 @@
 </div>
 
 <script>
+    // ========== 批量导入相关 ==========
+
+    function openImportModal() {
+        document.getElementById('importForm').reset();
+        document.getElementById('fileNameDisplay').innerText = '';
+        document.getElementById('importResult').style.display = 'none';
+        document.getElementById('importResult').innerHTML = '';
+        document.getElementById('importBtn').disabled = false;
+        document.getElementById('importModal').style.display = 'flex';
+    }
+
+    function closeImportModal() {
+        document.getElementById('importModal').style.display = 'none';
+    }
+
+    function updateFileName() {
+        var fileInput = document.getElementById('excelFile');
+        var display = document.getElementById('fileNameDisplay');
+        if (fileInput.files && fileInput.files.length > 0) {
+            display.innerText = '已选择：' + fileInput.files[0].name
+                + '（' + formatFileSize(fileInput.files[0].size) + '）';
+        } else {
+            display.innerText = '';
+        }
+    }
+
+    function formatFileSize(bytes) {
+        if (bytes < 1024) return bytes + ' B';
+        if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+        return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+    }
+
+    function submitImport() {
+        var fileInput = document.getElementById('excelFile');
+        if (!fileInput.files || fileInput.files.length === 0) {
+            alert('请先选择 Excel 文件');
+            return;
+        }
+
+        var file = fileInput.files[0];
+        if (!file.name.endsWith('.xlsx') && !file.name.endsWith('.xls')) {
+            alert('请选择 .xlsx 或 .xls 格式的文件');
+            return;
+        }
+
+        if (file.size > 10 * 1024 * 1024) {
+            alert('文件大小不能超过 10MB');
+            return;
+        }
+
+        var importBtn = document.getElementById('importBtn');
+        importBtn.disabled = true;
+        importBtn.innerText = '导入中...';
+
+        var formData = new FormData();
+        formData.append('excelFile', file);
+
+        fetch('${pageContext.request.contextPath}/AdminImportServlet', {
+            method: 'POST',
+            body: formData
+        })
+        .then(function(response) { return response.json(); })
+        .then(function(data) {
+            importBtn.disabled = false;
+            importBtn.innerText = '开始导入';
+
+            var resultDiv = document.getElementById('importResult');
+            resultDiv.style.display = 'block';
+
+            if (data.success) {
+                var html = '<div class="alert-success" style="margin-top:12px;">✓ ' + data.message + '</div>';
+                if (data.errors && data.errors.length > 0) {
+                    html += '<div style="margin-top:8px; max-height:200px; overflow-y:auto; font-size:12px; color:#d9877a;">';
+                    html += '<strong>以下行存在格式问题：</strong><ul style="margin:4px 0 0 16px;">';
+                    for (var i = 0; i < data.errors.length; i++) {
+                        html += '<li>' + data.errors[i] + '</li>';
+                    }
+                    html += '</ul></div>';
+                }
+                resultDiv.innerHTML = html;
+                // 刷新列表
+                setTimeout(function() {
+                    window.location.href = '${pageContext.request.contextPath}/AdminHomeServlet';
+                }, 2000);
+            } else {
+                var html = '<div class="alert-error" style="margin-top:12px;">⚠️ ' + data.message + '</div>';
+                if (data.errors && data.errors.length > 0) {
+                    html += '<div style="margin-top:8px; max-height:200px; overflow-y:auto; font-size:12px; color:#d9877a;">';
+                    html += '<strong>错误详情：</strong><ul style="margin:4px 0 0 16px;">';
+                    for (var i = 0; i < data.errors.length; i++) {
+                        html += '<li>' + data.errors[i] + '</li>';
+                    }
+                    html += '</ul></div>';
+                }
+                resultDiv.innerHTML = html;
+            }
+        })
+        .catch(function(error) {
+            importBtn.disabled = false;
+            importBtn.innerText = '开始导入';
+            alert('导入请求失败：' + error);
+        });
+    }
+
+    // ========== 批量导出相关 ==========
+
+    function exportScores() {
+        // 使用当前搜索条件
+        var idCard = document.getElementById('searchIdCard').value;
+        var admissionNo = document.getElementById('searchAdmissionNo').value;
+        var school = document.getElementById('searchSchool').value;
+        var college = document.getElementById('searchCollege').value;
+        var major = document.getElementById('searchMajor').value;
+        var className = document.getElementById('searchClass').value;
+
+        // 检查是否有搜索面板可见（用户正在使用搜索条件）
+        var params = [];
+        if (idCard) params.push('idCard=' + encodeURIComponent(idCard));
+        if (admissionNo) params.push('admissionNo=' + encodeURIComponent(admissionNo));
+        if (school) params.push('school=' + encodeURIComponent(school));
+        if (college) params.push('college=' + encodeURIComponent(college));
+        if (major) params.push('major=' + encodeURIComponent(major));
+        if (className) params.push('className=' + encodeURIComponent(className));
+
+        var url = '${pageContext.request.contextPath}/AdminExportServlet';
+        if (params.length > 0) {
+            url += '?' + params.join('&');
+        }
+
+        // 确认导出
+        var confirmMsg = params.length > 0
+            ? '将导出当前查询条件下的所有成绩，确定继续？'
+            : '将导出全部成绩，确定继续？';
+        if (confirm(confirmMsg)) {
+            window.location.href = url;
+        }
+    }
+
+    // ========== 原有函数 ==========
+
     function submitForm() {
         var form = document.getElementById('scoreForm');
         var formData = new FormData(form);

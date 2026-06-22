@@ -38,4 +38,8 @@ public class Cet4ScoreService {
     public boolean delete(int id) throws SQLException {
         return cet4ScoreDao.delete(id);
     }
+
+    public int batchAdd(List<Cet4Score> scoreList) throws SQLException {
+        return cet4ScoreDao.batchAdd(scoreList);
+    }
 }
