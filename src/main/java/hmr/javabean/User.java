@@ -1,5 +1,6 @@
 package hmr.javabean;
 
+//用户实体类，映射 user 表
 public class User {
     private int id;
     private String idCardNumber;

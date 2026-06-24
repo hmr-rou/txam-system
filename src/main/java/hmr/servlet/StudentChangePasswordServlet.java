@@ -11,6 +11,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.SQLException;
 
+//学生修改密码 → 重定向到主页
 @WebServlet("/StudentChangePasswordServlet")
 public class StudentChangePasswordServlet extends HttpServlet {
 

@@ -11,6 +11,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.SQLException;
 
+//根据 ID 删除成绩 → 重定向到主页
 @WebServlet("/AdminDeleteScoreServlet")
 public class AdminDeleteScoreServlet extends HttpServlet {
 

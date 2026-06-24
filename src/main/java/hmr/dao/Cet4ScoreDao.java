@@ -22,10 +22,11 @@ public class Cet4ScoreDao {
                 "admission_no AS admissionNo, " +
                 "score, exam_time AS examTime " +
                 "FROM cet4_score ORDER BY exam_time DESC, id DESC";
+        // BeanListHandler：返回 List 集合
         return runner.query(sql, new BeanListHandler<>(Cet4Score.class));
     }
-
-    // 根据身份证号查询
+    // ========== 多条件动态查询 ==========
+    // 1.根据身份证号查询
     public List<Cet4Score> findByIdCard(String idCardNumber) throws SQLException {
         String sql = "SELECT id, name, school, college, major, " +
                 "class_name AS className, " +
@@ -36,7 +37,7 @@ public class Cet4ScoreDao {
         return runner.query(sql, new BeanListHandler<>(Cet4Score.class), idCardNumber);
     }
 
-    // 根据ID查询
+    // 2.根据ID查询
     public Cet4Score findById(int id) throws SQLException {
         String sql = "SELECT id, name, school, college, major, " +
                 "class_name AS className, " +
@@ -47,7 +48,7 @@ public class Cet4ScoreDao {
         return runner.query(sql, new BeanHandler<>(Cet4Score.class), id);
     }
 
-    // 多条件查询
+    // 3.条件查询
     public List<Cet4Score> findByCondition(String idCard, String admissionNo, String school,
                                            String college, String major, String className) throws SQLException {
         StringBuilder sql = new StringBuilder(
@@ -79,7 +80,7 @@ public class Cet4ScoreDao {
         if (major != null && !major.trim().isEmpty()) {
             sql.append(" AND major LIKE ?");
             params.add("%" + major + "%");
-        }
+       }
         if (className != null && !className.trim().isEmpty()) {
             sql.append(" AND class_name LIKE ?");
             params.add("%" + className + "%");

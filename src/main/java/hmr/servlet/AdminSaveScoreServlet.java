@@ -18,8 +18,9 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+//新增/修改成绩（含校验）→ 返回 JSON
 @WebServlet("/AdminSaveScoreServlet")
-@MultipartConfig
+@MultipartConfig// 支持文件上传
 public class AdminSaveScoreServlet extends HttpServlet {
 
     private Cet4ScoreService cet4ScoreService = new Cet4ScoreService();
@@ -36,12 +37,13 @@ public class AdminSaveScoreServlet extends HttpServlet {
         User user = (User) session.getAttribute("user");
         if (user == null || !"admin".equals(user.getRole())) {
             Map<String, Object> result = new HashMap<>();
+            // 返回 JSON 错误
             result.put("success", false);
             result.put("message", "无权限操作");
             new ObjectMapper().writeValue(response.getWriter(), result);
             return;
         }
-
+        // 2. 接收表单参数
         String idStr = request.getParameter("id");
         String name = request.getParameter("name");
         String idCardNumber = request.getParameter("idCardNumber");
@@ -54,8 +56,8 @@ public class AdminSaveScoreServlet extends HttpServlet {
         String examTimeStr = request.getParameter("examTime");
 
         Map<String, Object> result = new HashMap<>();
-
-        // 服务端必填校验
+        // 3. 数据校验
+        // 3.1 必填校验
         if (isBlank(name) || isBlank(idCardNumber) || isBlank(school) || isBlank(college)
                 || isBlank(major) || isBlank(className) || isBlank(admissionNo)
                 || isBlank(scoreStr) || isBlank(examTimeStr)) {
@@ -65,7 +67,7 @@ public class AdminSaveScoreServlet extends HttpServlet {
             return;
         }
 
-        // 成绩数值校验
+        // 3.2 成绩范围校验
         double scoreValue;
         try {
             scoreValue = Double.parseDouble(scoreStr);
@@ -82,7 +84,7 @@ public class AdminSaveScoreServlet extends HttpServlet {
             return;
         }
 
-        // 日期格式校验
+        // 3.3 日期格式校验
         Date examTime;
         try {
             examTime = Date.valueOf(examTimeStr);
@@ -92,7 +94,7 @@ public class AdminSaveScoreServlet extends HttpServlet {
             new ObjectMapper().writeValue(response.getWriter(), result);
             return;
         }
-
+        // 4. 封装数据
         try {
             Cet4Score score = new Cet4Score();
             score.setName(name.trim());
@@ -107,6 +109,7 @@ public class AdminSaveScoreServlet extends HttpServlet {
 
             boolean success;
             boolean isNew = false;
+            // 5. 保存到数据库
             if (idStr != null && !idStr.trim().isEmpty()) {
                 int id;
                 try {
@@ -133,7 +136,7 @@ public class AdminSaveScoreServlet extends HttpServlet {
                     // 用户同步失败不影响成绩保存结果
                 }
             }
-
+            // 6. 返回 JSON 结果
             result.put("success", success);
             result.put("message", success ? "保存成功" : "保存失败");
         } catch (SQLException e) {

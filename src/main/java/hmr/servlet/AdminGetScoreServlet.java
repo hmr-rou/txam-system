@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.SQLException;
 
+//根据 ID 查询单条成绩 → 返回 JSON
 @WebServlet("/AdminGetScoreServlet")
 public class AdminGetScoreServlet extends HttpServlet {
 

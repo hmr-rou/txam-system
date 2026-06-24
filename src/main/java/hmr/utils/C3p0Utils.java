@@ -2,6 +2,7 @@ package hmr.utils;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import javax.sql.DataSource;
 
+//数据库连接池工具，提供 DataSource 实例，从 c3p0-config.xml 读取配置
 public class C3p0Utils {
     private static DataSource ds = null;
     static {

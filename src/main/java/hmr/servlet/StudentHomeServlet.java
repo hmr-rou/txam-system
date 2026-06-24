@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
+//转发到 student_home.jsp
 @WebServlet("/StudentHomeServlet")
 public class StudentHomeServlet extends HttpServlet {
 

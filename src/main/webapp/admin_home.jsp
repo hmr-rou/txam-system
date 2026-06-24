@@ -54,7 +54,6 @@
 
     <!-- 多条件查询面板 -->
     <div class="search-panel" id="searchPanel" style="display: none;">
-        <div class="search-title">🔍 多条件查询</div>
         <div class="search-form">
             <div class="search-item">
                 <label>身份证号</label>
@@ -241,7 +240,7 @@
 <div id="changePwdModal" class="modal">
     <div class="modal-content" style="width: 400px;">
         <div class="modal-header">
-            <span>🔐 修改密码</span>
+            <span>修改密码</span>
             <span class="close" onclick="closeChangePwdModal()">&times;</span>
         </div>
         <div class="modal-body">
@@ -327,12 +326,20 @@
 
         fetch('${pageContext.request.contextPath}/AdminImportServlet', {
             method: 'POST',
+            credentials: 'same-origin',
             body: formData
         })
         .then(function(response) { return response.json(); })
         .then(function(data) {
             importBtn.disabled = false;
             importBtn.innerText = '开始导入';
+
+            // 登录过期处理
+            if (data.message === '无权限操作' || data.message === '未登录') {
+                alert('登录已过期，请重新登录');
+                window.location.href = '${pageContext.request.contextPath}/login.jsp';
+                return;
+            }
 
             var resultDiv = document.getElementById('importResult');
             resultDiv.style.display = 'block';
@@ -414,6 +421,7 @@
 
         fetch(form.action, {
             method: 'POST',
+            credentials: 'same-origin',
             body: formData
         })
         .then(function(response) { return response.json(); })
@@ -423,6 +431,9 @@
                 closeModal();
                 // 刷新页面以显示最新数据
                 window.location.href = '${pageContext.request.contextPath}/AdminHomeServlet';
+            } else if (data.message === '无权限操作') {
+                alert('登录已过期，请重新登录');
+                window.location.href = '${pageContext.request.contextPath}/login.jsp';
             } else {
                 alert(data.message);
             }

@@ -31,7 +31,7 @@
     </div>
     <div class="nav-right">
         <span class="user-name"><%= user != null ? user.getName() : "考生" %> 同学</span>
-        <a href="javascript:void(0)" class="logout-btn" onclick="openChangePwdModal()">🔐 修改密码</a>
+        <a href="javascript:void(0)" class="logout-btn" onclick="openChangePwdModal()">修改密码</a>
         <a href="${pageContext.request.contextPath}/LogoutServlet" class="logout-btn">退出登录</a>
     </div>
 </div>

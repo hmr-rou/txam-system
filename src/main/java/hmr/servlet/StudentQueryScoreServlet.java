@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
+//按身份证号查询成绩 → 转发到学生主页
 @WebServlet("/StudentQueryScoreServlet")
 public class StudentQueryScoreServlet extends HttpServlet {
 

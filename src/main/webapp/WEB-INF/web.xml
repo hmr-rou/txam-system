@@ -9,3 +9,4 @@
     <welcome-file>login.jsp</welcome-file>
   </welcome-file-list>
 </web-app>
+<!--/Web 应用配置：设置 login.jsp 为欢迎页-->

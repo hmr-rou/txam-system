@@ -4,7 +4,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Base64;
-
+// 密码加密工具
 /**
  * 密码工具类 — 使用 SHA-256 + 随机盐进行哈希
  */
@@ -31,8 +31,10 @@ public class PasswordUtils {
     public static String hash(String password, String salt) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
+            // 将盐和密码混合
             md.update(salt.getBytes());
             byte[] hashed = md.digest(password.getBytes());
+            // 将字节数组转为十六进制字符串
             StringBuilder sb = new StringBuilder();
             for (byte b : hashed) {
                 sb.append(String.format("%02x", b));
@@ -51,7 +53,9 @@ public class PasswordUtils {
      * @return 是否匹配
      */
     public static boolean verify(String password, String salt, String storedHash) {
+        // 1. 用相同的盐对用户输入的密码进行哈希
         String computed = hash(password, salt);
+        // 2. 比较计算出的哈希值和存储的哈希值是否一致
         return computed.equals(storedHash);
     }
 }

@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class Cet4ScoreService {
-
+    // 直接调用 DAO
     private Cet4ScoreDao cet4ScoreDao = new Cet4ScoreDao();
 
     public List<Cet4Score> findAll() throws SQLException {

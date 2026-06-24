@@ -12,37 +12,39 @@ import java.sql.SQLException;
 public class UserDao {
 
     private QueryRunner runner = new QueryRunner(C3p0Utils.getDataSource());
-
+    // QueryRunner 是 Apache DBUtils 的核心类，用于执行 SQL
     // 登录验证（使用 SHA-256 + 盐哈希验证，兼容无 salt 列的旧表）
     public User login(String idCardNumber, String password) throws SQLException {
         User user = null;
-        // 先尝试查询含 salt 列（明确的列别名确保正确映射）
+        //步骤 1：查询用户信息（先尝试查询含 salt 列）
         try {
             String sql = "SELECT id, id_card_number AS idCardNumber, name, password, salt, role FROM user WHERE id_card_number = ?";
-            user = runner.query(sql, new BeanHandler<>(User.class), idCardNumber);
+            // BeanHandler：将查询结果自动映射到 User 对象
+            user = runner.query(sql, new BeanHandler<>(User.class), idCardNumber);// 2. 执行查询并自动映射到 user 对象
         } catch (SQLException e) {
-            // salt 列不存在，回退为不查 salt
+            // 如果 salt 列不存在（旧数据库），回退到不查 salt
             String sql = "SELECT id, id_card_number AS idCardNumber, name, password, role FROM user WHERE id_card_number = ?";
             user = runner.query(sql, new BeanHandler<>(User.class), idCardNumber);
         }
-
+        //步骤 2：用户不存在
         if (user == null) {
             return null;
         }
 
-        // 如果 salt 为空（旧数据或表中无此列），直接比对明文密码
+        //  步骤 3：密码验证
+        // 情况1：没有 salt（旧数据），直接比对明文密码
         if (user.getSalt() == null || user.getSalt().isEmpty()) {
             if (password.equals(user.getPassword())) {
-                return user;
+                return user;// 密码正确
             }
-            return null;
+            return null;// 密码错误
         }
 
-        // 使用盐 + SHA-256 验证密码
+        // 情况2：有 salt（新数据），使用 SHA-256 + 盐验证
         if (PasswordUtils.verify(password, user.getSalt(), user.getPassword())) {
-            return user;
+            return user;// 密码正确
         }
-        return null;
+        return null;// 密码错误
     }
 
     // 检查用户是否存在（按身份证号）

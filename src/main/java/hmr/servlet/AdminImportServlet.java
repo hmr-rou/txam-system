@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+//批接收 Excel 文件 → 解析 → 批量导入 → 同步创建用户 → 返回 JSON	量导入
 /**
  * 批量导入成绩（Excel）
  */
@@ -62,7 +63,7 @@ public class AdminImportServlet extends HttpServlet {
             mapper.writeValue(response.getWriter(), result);
             return;
         }
-
+        //校验文件格式
         String fileName = filePart.getSubmittedFileName();
         if (fileName == null || (!fileName.endsWith(".xlsx") && !fileName.endsWith(".xls"))) {
             result.put("success", false);
@@ -116,7 +117,7 @@ public class AdminImportServlet extends HttpServlet {
             if (!errors.isEmpty()) {
                 msg.append("，").append(errors.size()).append(" 行数据存在格式问题被跳过");
             }
-
+            //返回结果
             result.put("success", true);
             result.put("message", msg.toString());
             result.put("insertedCount", insertedCount);

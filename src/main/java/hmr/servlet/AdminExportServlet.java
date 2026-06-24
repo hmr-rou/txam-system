@@ -17,7 +17,7 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-
+//导出 Excel
 /**
  * 批量导出成绩（Excel）
  * 支持按学校、二级学院、专业、班级等条件筛选导出
@@ -47,17 +47,17 @@ public class AdminExportServlet extends HttpServlet {
         String college = request.getParameter("college");
         String major = request.getParameter("major");
         String className = request.getParameter("className");
-
+        //查询数据
         try {
             List<Cet4Score> scoreList;
             // 如果没有任何查询条件，导出全部
             if (allBlank(idCard, admissionNo, school, college, major, className)) {
                 scoreList = cet4ScoreService.findAll();
-            } else {
+            } else {// 按条件导出
                 scoreList = cet4ScoreService.findByCondition(idCard, admissionNo, school, college, major, className);
             }
 
-            // 生成文件名
+            // 生成文件名（带时间戳）
             String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
             String fileName = "四级成绩导出_" + timestamp + ".xlsx";
 

@@ -1,6 +1,6 @@
 package hmr.javabean;
 
-
+//成绩实体类，映射 cet4_score 表，
 import java.sql.Date;
 
 public class Cet4Score {
