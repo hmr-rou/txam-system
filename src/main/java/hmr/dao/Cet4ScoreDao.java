@@ -21,7 +21,7 @@ public class Cet4ScoreDao {
                 "id_card_number AS idCardNumber, " +
                 "admission_no AS admissionNo, " +
                 "score, exam_time AS examTime " +
-                "FROM cet4_score ORDER BY exam_time DESC, id DESC";
+                "FROM cet4_score ORDER BY id ASC";
         // BeanListHandler：返回 List 集合
         return runner.query(sql, new BeanListHandler<>(Cet4Score.class));
     }
@@ -85,7 +85,7 @@ public class Cet4ScoreDao {
             sql.append(" AND class_name LIKE ?");
             params.add("%" + className + "%");
         }
-        sql.append(" ORDER BY exam_time DESC");
+        sql.append(" ORDER BY id ASC");
 
         return runner.query(sql.toString(), new BeanListHandler<>(Cet4Score.class), params.toArray());
     }
