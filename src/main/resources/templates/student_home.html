@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>考生主页 - 四级成绩管理系统</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+</head>
+<body>
+<div class="navbar">
+    <div class="logo">
+        <span></span> 四级成绩管理系统
+    </div>
+    <div class="nav-right">
+        <span class="user-name" th:text="|${session.user.name} 同学|">考生 同学</span>
+        <a href="javascript:void(0)" class="logout-btn" onclick="openChangePwdModal()">修改密码</a>
+        <a th:href="@{/logout}" class="logout-btn">退出登录</a>
+    </div>
+</div>
+
+<div class="student-container">
+    <div class="card">
+        <div class="card-header">查询我的成绩</div>
+        <div class="card-body">
+            <form th:action="@{/student/query}" method="post">
+                <button type="submit" class="btn btn-primary">刷新成绩</button>
+            </form>
+        </div>
+    </div>
+
+    <div th:if="${message}" class="alert-success" style="max-width:1200px; margin:20px auto 0;" th:text="${message}"></div>
+    <div th:if="${error}" class="alert-error" style="max-width:1200px; margin:20px auto 0;" th:text="${error}"></div>
+
+    <div th:if="${scoreList != null and !scoreList.isEmpty()}">
+        <div class="card">
+            <div class="card-header">我的成绩单</div>
+            <div class="card-body">
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                        <tr>
+                            <th>考试时间</th><th>准考证号</th><th>学校</th><th>二级学院</th>
+                            <th>专业</th><th>班级</th><th>姓名</th><th>身份证号</th><th>成绩</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="s : ${scoreList}">
+                            <td th:text="${s.examTime}"></td>
+                            <td th:text="${s.admissionNo}"></td>
+                            <td th:text="${s.school}"></td>
+                            <td th:text="${s.college}"></td>
+                            <td th:text="${s.major}"></td>
+                            <td th:text="${s.className}"></td>
+                            <td th:text="${s.name}"></td>
+                            <td th:text="${s.idCardNumber}"></td>
+                            <td th:class="${s.score >= 425 ? 'score-pass' : 'score-fail'}" th:text="${s.score}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:if="${scoreList != null and scoreList.isEmpty()}" class="empty-state">
+        <div style="font-size: 48px; margin-bottom: 12px;"></div>
+        <p>暂无成绩数据</p>
+        <p style="font-size: 12px; margin-top: 8px;">系统中暂无您的成绩记录</p>
+    </div>
+</div>
+
+<!-- 修改密码模态框 -->
+<div id="changePwdModal" class="modal">
+    <div class="modal-content" style="width: 400px;">
+        <div class="modal-header">
+            <span>🔐 修改密码</span>
+            <span class="close" onclick="closeChangePwdModal()">&times;</span>
+        </div>
+        <div class="modal-body">
+            <form id="changePwdForm" th:action="@{/student/changePassword}" method="post">
+                <div class="form-group">
+                    <label>原密码 <span class="required">*</span></label>
+                    <input type="password" name="oldPassword" id="oldPassword" required placeholder="请输入原密码">
+                </div>
+                <div class="form-group">
+                    <label>新密码 <span class="required">*</span></label>
+                    <input type="password" name="newPassword" id="newPassword" required placeholder="请输入新密码">
+                </div>
+                <div class="form-group">
+                    <label>确认新密码 <span class="required">*</span></label>
+                    <input type="password" name="confirmPassword" id="confirmPassword" required placeholder="请再次输入新密码">
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" onclick="closeChangePwdModal()">取消</button>
+            <button class="btn btn-primary" onclick="submitChangePwd()">确认修改</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openChangePwdModal() {
+        document.getElementById('changePwdForm').reset();
+        document.getElementById('changePwdModal').style.display = 'flex';
+    }
+    function closeChangePwdModal() {
+        document.getElementById('changePwdModal').style.display = 'none';
+    }
+    function submitChangePwd() {
+        var oldPwd = document.getElementById('oldPassword').value;
+        var newPwd = document.getElementById('newPassword').value;
+        var confirmPwd = document.getElementById('confirmPassword').value;
+        if (!oldPwd || !newPwd || !confirmPwd) { alert('请填写完整信息'); return; }
+        if (newPwd !== confirmPwd) { alert('两次输入的新密码不一致'); return; }
+        if (newPwd.length < 6) { alert('新密码长度不能少于6位'); return; }
+        document.getElementById('changePwdForm').submit();
+    }
+    window.onclick = function(event) {
+        if (event.target.classList.contains('modal')) event.target.style.display = 'none';
+    }
+</script>
+</body>
+</html>

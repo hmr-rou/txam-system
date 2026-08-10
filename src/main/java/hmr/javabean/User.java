@@ -1,7 +1,13 @@
 package hmr.javabean;
 
-//用户实体类，映射 user 表
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+
+@TableName("user")
 public class User {
+
+    @TableId(type = IdType.AUTO)
     private int id;
     private String idCardNumber;
     private String name;

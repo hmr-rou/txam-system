@@ -1,34 +1,28 @@
 package hmr.javabean;
 
-//成绩实体类，映射 cet4_score 表，
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.sql.Date;
 
+@TableName("cet4_score")
 public class Cet4Score {
 
-
+    @TableId(type = IdType.AUTO)
     private int id;
-
     private String name;
-
     private String school;
-
     private String college;
-
     private String major;
-
     private String className;
-
     private String idCardNumber;
-
     private String admissionNo;
-
     private double score;
-
     private Date examTime;
 
     public Cet4Score() {}
 
-    // getter 和 setter
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 
